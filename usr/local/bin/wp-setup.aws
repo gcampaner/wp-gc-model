@@ -21,10 +21,11 @@ echo ""
 
 cd /tmp/
 /usr/bin/git clone git://github.com/gcampaner/wp-gc-model.git
-if [ -f /tmp/amimoto/wp-setup.sh ]; then
-  /bin/sh /tmp/amimoto/wp-setup.sh $SITENAME
+if [ -f /tmp/wp-gc-model/wp-setup.sh ]; then
+  /bin/sh /tmp/wp-gc-model/wp-setup.sh $SITENAME
 fi
-/bin/rm -Rf /tmp/amimoto
+/bin/rm -Rf /tmp/wp-gc-model
 
 echo ""
 echo "...done"
+ 

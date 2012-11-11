@@ -13,7 +13,7 @@ PUBLICNAME=`/usr/bin/curl -s http://169.254.169.254/latest/meta-data/public-host
 AZ=`/usr/bin/curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone/`
 TZ="America\/Sao_Paulo"
 
-/bin/cp /tmp/amimoto/etc/motd /etc/motd
+/bin/cp /tmp/wp-gc-model/etc/motd /etc/motd
 
 if [ "$AZ" = "eu-west-1a" -o "$AZ" = "eu-west-1b" -o "$AZ" = "eu-west-1c" ]; then
   REGION=eu-west-1
@@ -37,36 +37,36 @@ cd /tmp/
 
 /bin/mv /etc/localtime /etc/localtime.bak
 /bin/ln -s /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
-/bin/cp /tmp/amimoto/etc/motd /etc/motd
-/bin/cp /tmp/amimoto/etc/sysconfig/i18n /etc/sysconfig/i18n
+/bin/cp /tmp/wp-gc-model/etc/motd /etc/motd
+/bin/cp /tmp/wp-gc-model/etc/sysconfig/i18n /etc/sysconfig/i18n
   
-/bin/cp -Rf /tmp/amimoto/etc/nginx/* /etc/nginx/
-sed -e "s/\$host\([;\.]\)/$INSTANCEID\1/" /tmp/amimoto/etc/nginx/conf.d/default.conf > /etc/nginx/conf.d/default.conf
-sed -e "s/\$host\([;\.]\)/$INSTANCEID\1/" /tmp/amimoto/etc/nginx/conf.d/default.backend.conf > /etc/nginx/conf.d/default.backend.conf
+/bin/cp -Rf /tmp/wp-gc-model/etc/nginx/* /etc/nginx/
+sed -e "s/\$host\([;\.]\)/$INSTANCEID\1/" /tmp/wp-gc-model/etc/nginx/conf.d/default.conf > /etc/nginx/conf.d/default.conf
+sed -e "s/\$host\([;\.]\)/$INSTANCEID\1/" /tmp/wp-gc-model/etc/nginx/conf.d/default.backend.conf > /etc/nginx/conf.d/default.backend.conf
 if [ "$SERVERNAME" = "$INSTANCEID" ]; then
   /sbin/service nginx stop
   /bin/rm -Rf /var/log/nginx/*
   /bin/rm -Rf /var/cache/nginx/*
   /sbin/service nginx start
 else
-  sed -e "s/\$host\([;\.]\)/$SERVERNAME\1/" /tmp/amimoto/etc/nginx/conf.d/default.conf | sed -e "s/ default;/;/" | sed -e "s/\(server_name \)_/\1$SERVERNAME www.$SERVERNAME/" | sed -e "s/\(\\s*\)\(include     \/etc\/nginx\/phpmyadmin;\)/\1#\2/" > /etc/nginx/conf.d/$SERVERNAME.conf
-  sed -e "s/\$host\([;\.]\)/$SERVERNAME\1/" /tmp/amimoto/etc/nginx/conf.d/default.backend.conf | sed -e "s/ default;/;/" | sed -e "s/\(server_name \)_/\1$SERVERNAME www.$SERVERNAME/" > /etc/nginx/conf.d/$SERVERNAME.backend.conf
+  sed -e "s/\$host\([;\.]\)/$SERVERNAME\1/" /tmp/wp-gc-model/etc/nginx/conf.d/default.conf | sed -e "s/ default;/;/" | sed -e "s/\(server_name \)_/\1$SERVERNAME www.$SERVERNAME/" | sed -e "s/\(\\s*\)\(include     \/etc\/nginx\/phpmyadmin;\)/\1#\2/" > /etc/nginx/conf.d/$SERVERNAME.conf
+  sed -e "s/\$host\([;\.]\)/$SERVERNAME\1/" /tmp/wp-gc-model/etc/nginx/conf.d/default.backend.conf | sed -e "s/ default;/;/" | sed -e "s/\(server_name \)_/\1$SERVERNAME www.$SERVERNAME/" > /etc/nginx/conf.d/$SERVERNAME.backend.conf
   /usr/sbin/nginx -s reload
 fi
 
 if [ "$SERVERNAME" = "$INSTANCEID" ]; then
   /sbin/service php-fpm stop
-  sed -e "s/\date\.timezone = \"UTC\"/date\.timezone = \"$TZ\"/" /tmp/amimoto/etc/php.ini > /etc/php.ini
-  /bin/cp -Rf /tmp/amimoto/etc/php.d/* /etc/php.d/
-  /bin/cp /tmp/amimoto/etc/php-fpm.conf /etc/
-  /bin/cp -Rf /tmp/amimoto/etc/php-fpm.d/* /etc/php-fpm.d/
+  sed -e "s/\date\.timezone = \"UTC\"/date\.timezone = \"$TZ\"/" /tmp/wp-gc-model/etc/php.ini > /etc/php.ini
+  /bin/cp -Rf /tmp/wp-gc-model/etc/php.d/* /etc/php.d/
+  /bin/cp /tmp/wp-gc-model/etc/php-fpm.conf /etc/
+  /bin/cp -Rf /tmp/wp-gc-model/etc/php-fpm.d/* /etc/php-fpm.d/
   /bin/rm -Rf /var/log/php-fpm/*
   /sbin/service php-fpm start
 fi
 
 if [ "$SERVERNAME" = "$INSTANCEID" ]; then
 #  /sbin/service mysql stop
-#  /bin/cp /tmp/amimoto/etc/my.cnf /etc/
+#  /bin/cp /tmp/wp-gc-model/etc/my.cnf /etc/
 #  /bin/rm /var/lib/mysql/ib_logfile*
 #  /bin/rm /var/log/mysqld.log*
 #  /sbin/service mysql start
@@ -78,8 +78,8 @@ echo "WordPress install ..."
   /bin/rm /tmp/latest.tar.gz
 fi
 /bin/mv /tmp/wordpress /var/www/vhosts/$SERVERNAME
-if [ -f /tmp/amimoto/wp-setup.php ]; then
-  /usr/bin/php /tmp/amimoto/wp-setup.php $SERVERNAME $INSTANCEID $PUBLICNAME $
+if [ -f /tmp/wp-gc-model/wp-setup.php ]; then
+  /usr/bin/php /tmp/wp-gc-model/wp-setup.php $SERVERNAME $INSTANCEID $PUBLICNAME $
 fi
 /bin/chown -R nginx:nginx /var/log/nginx
 plugin_install "nginx-champuru.1.1.5.zip" "$SERVERNAME" > /dev/null 2>&1
