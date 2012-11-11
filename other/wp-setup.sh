@@ -8,7 +8,7 @@ function plugin_install(){
 
 SERVERNAME=$1
 INSTANCEID=default
-TZ="Asia\/Tokyo"
+TZ="America\/Sao_Paulo"
 
 cd /tmp/
 
@@ -41,14 +41,6 @@ if [ "$SERVERNAME" = "$INSTANCEID" ]; then
   /bin/cp -Rf /tmp/wp-gc-model/etc/php-fpm.d/* /etc/php-fpm.d/
   /bin/rm -Rf /var/log/php-fpm/*
   /sbin/service php-fpm start
-fi
-
-if [ "$SERVERNAME" = "$INSTANCEID" ]; then
-  /sbin/service mysql stop
-  /bin/cp /tmp/wp-gc-model/etc/my.cnf /etc/
-  /bin/rm /var/lib/mysql/ib_logfile*
-  /bin/rm /var/log/mysqld.log*
-  /sbin/service mysql start
 fi
 
 echo "WordPress install ..."

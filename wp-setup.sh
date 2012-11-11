@@ -64,14 +64,6 @@ if [ "$SERVERNAME" = "$INSTANCEID" ]; then
   /sbin/service php-fpm start
 fi
 
-if [ "$SERVERNAME" = "$INSTANCEID" ]; then
-#  /sbin/service mysql stop
-#  /bin/cp /tmp/wp-gc-model/etc/my.cnf /etc/
-#  /bin/rm /var/lib/mysql/ib_logfile*
-#  /bin/rm /var/log/mysqld.log*
-#  /sbin/service mysql start
-fi
-
 echo "WordPress install ..."
 /usr/bin/wget http://br.wordpress.org/latest-pt_BR.tar.gz > /dev/null 2>&1
 /bin/tar xvfz /tmp/latest.tar.gz > /dev/null 2>&1
