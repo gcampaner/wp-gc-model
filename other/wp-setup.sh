@@ -57,13 +57,13 @@ echo "WordPress install ..."
 /bin/rm /tmp/latest-ja.tar.gz
 /bin/mv /tmp/wordpress /var/www/vhosts/$SERVERNAME
 plugin_install "nginx-champuru.1.1.5.zip" "$SERVERNAME" > /dev/null 2>&1
-plugin_install "wpbooster-cdn-client.2.3.0.zip" "$SERVERNAME" > /dev/null 2>&1
-plugin_install "wp-remote-manager-client.0.7.0.2.zip" "$SERVERNAME" > /dev/null 2>&1
 plugin_install "head-cleaner.1.4.2.10.zip" "$SERVERNAME" > /dev/null 2>&1
 plugin_install "wp-total-hacks.1.0.2.zip" "$SERVERNAME" > /dev/null 2>&1
-plugin_install "flamingo.1.0.3.zip" "$SERVERNAME" > /dev/null 2>&1
-plugin_install "contact-form-7.3.3.1.zip" "$SERVERNAME" > /dev/null 2>&1
 plugin_install "jetpack.2.0.zip" "$SERVERNAME" > /dev/null 2>&1
+plugin_install "worker.zip" "$SERVERNAME" > /dev/null 2>&1
+plugin_install "w3-total-cache.0.9.2.4.zip" "$SERVERNAME" > /dev/null 2>&1
+plugin_install "wp-optimize.0.9.4.zip" "$SERVERNAME" > /dev/null 2>&1
+plugin_install "login-lockdown.1.5.zip" "$SERVERNAME" > /dev/null 2>&1
 if [ -f /tmp/amimoto/wp-setup.php ]; then
   /usr/bin/php /tmp/amimoto/other/wp-setup.php $SERVERNAME $INSTANCEID
 fi

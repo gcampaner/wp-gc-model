@@ -15,7 +15,7 @@ $mysql_user = empty($mysql_user) ? substr('wp_'.md5($mysql_db),0,16) : $mysql_us
 $mysql_pwd  = empty($mysql_pwd)  ? md5(mt_rand().date("YmdHisu"))    : $mysql_pwd;
 
 // make user and database
-$link = mysql_connect('localhost:3307', 'root', '');
+$link = mysql_connect('mysql.gcampaner.com.br', 'gcmysql', 'Muitosucesso');
 if ( !$link )
     die('MySQL connect error!!: '.mysql_error());
 if ( !mysql_select_db('mysql', $link) )
@@ -49,7 +49,7 @@ define('SECURE_AUTH_SALT', 'put your unique phrase here');
 define('LOGGED_IN_SALT',   'put your unique phrase here');
 define('NONCE_SALT',       'put your unique phrase here');
 \$table_prefix  = 'wp_';
-define('WPLANG', 'ja');
+define('WPLANG', 'pt_BR');
 define('WP_DEBUG', false);
 if ( !defined('ABSPATH') )
     define('ABSPATH', dirname(__FILE__) . '/');

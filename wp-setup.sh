@@ -7,81 +7,38 @@ function plugin_install(){
 }
 
 SERVERNAME=$1
+DATABASE=$2
 INSTANCEID=`/usr/bin/curl -s http://169.254.169.254/latest/meta-data/instance-id`
 PUBLICNAME=`/usr/bin/curl -s http://169.254.169.254/latest/meta-data/public-hostname`
 AZ=`/usr/bin/curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone/`
+TZ="America\/Sao_Paulo"
 
 /bin/cp /tmp/amimoto/etc/motd /etc/motd
 
 if [ "$AZ" = "eu-west-1a" -o "$AZ" = "eu-west-1b" -o "$AZ" = "eu-west-1c" ]; then
   REGION=eu-west-1
-  TZ=WET
 elif [ "$AZ" = "sa-east-1a" -o "$AZ" = "sa-east-1b" ]; then
   REGION=sa-east-1
-  TZ="America\/Sao_Paulo"
 elif [ "$AZ" = "us-east-1a" -o "$AZ" = "us-east-1b" -o "$AZ" = "us-east-1c" -o "$AZ" = "us-east-1d" -o "$AZ" = "us-east-1e" ]; then
   REGION=us-east-1
-  TZ="US\/Eastern"
 elif [ "$AZ" = "ap-northeast-1a" -o "$AZ" = "ap-northeast-1b" -o "$AZ" = "ap-northeast-1c" ]; then
   REGION=ap-northeast-1
-  TZ="Asia\/Tokyo"
 elif [ "$AZ" = "us-west-2a" -o "$AZ" = "us-west-2b" -o "$AZ" = "us-west-2c" ]; then
   REGION=us-west-2
-  TZ="US\/Pacific"
 elif [ "$AZ" = "us-west-1a" -o "$AZ" = "us-west-1b" -o "$AZ" = "us-west-1c" ]; then
   REGION=us-west-1
-  TZ="US\/Pacific"
 elif [ "$AZ" = "ap-southeast-1a" -o "$AZ" = "ap-southeast-1b" ]; then
   REGION=ap-southeast-1
-  TZ="Asia\/Singapore"
 else
   REGION=unknown
-  TZ="UTC"
 fi
 
 cd /tmp/
 
-if [ "$SERVERNAME" = "$INSTANCEID" -a "$REGION" = "eu-west-1" ]; then
-  /bin/mv /etc/localtime /etc/localtime.bak
-  /bin/ln -s /usr/share/zoneinfo/WET /etc/localtime
-  /bin/cp /tmp/amimoto/etc/motd /etc/motd
-  /bin/cp /tmp/amimoto/etc/sysconfig/i18n /etc/sysconfig/i18n
-elif [ "$SERVERNAME" = "$INSTANCEID" -a "$REGION" = "sa-east-1" ]; then
-  /bin/mv /etc/localtime /etc/localtime.bak
-  /bin/ln -s /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
-  /bin/cp /tmp/amimoto/etc/motd /etc/motd
-  /bin/cp /tmp/amimoto/etc/sysconfig/i18n /etc/sysconfig/i18n
-elif [ "$SERVERNAME" = "$INSTANCEID" -a "$REGION" = "us-east-1" ]; then
-  /bin/mv /etc/localtime /etc/localtime.bak
-  /bin/ln -s /usr/share/zoneinfo/US/Eastern /etc/localtime
-  /bin/cp /tmp/amimoto/etc/motd /etc/motd
-  /bin/cp /tmp/amimoto/etc/sysconfig/i18n /etc/sysconfig/i18n
-elif [ "$SERVERNAME" = "$INSTANCEID" -a "$REGION" = "ap-northeast-1" ]; then
-  /bin/mv /etc/localtime /etc/localtime.bak
-  /bin/ln -s /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
-  /bin/cp /tmp/amimoto/etc/motd.jp /etc/motd
-  /bin/cp /tmp/amimoto/etc/sysconfig/i18n.jp /etc/sysconfig/i18n
-elif [ "$SERVERNAME" = "$INSTANCEID" -a "$REGION" = "us-west-2" ]; then
-  /bin/mv /etc/localtime /etc/localtime.bak
-  /bin/ln -s /usr/share/zoneinfo/US/Pacific /etc/localtime
-  /bin/cp /tmp/amimoto/etc/motd /etc/motd
-  /bin/cp /tmp/amimoto/etc/sysconfig/i18n /etc/sysconfig/i18n
-elif [ "$SERVERNAME" = "$INSTANCEID" -a "$REGION" = "us-west-1" ]; then
-  /bin/mv /etc/localtime /etc/localtime.bak
-  /bin/ln -s /usr/share/zoneinfo/US/Pacific /etc/localtime
-  /bin/cp /tmp/amimoto/etc/motd /etc/motd
-  /bin/cp /tmp/amimoto/etc/sysconfig/i18n /etc/sysconfig/i18n
-elif [ "$SERVERNAME" = "$INSTANCEID" -a "$REGION" = "ap-southeast-1" ]; then
-  /bin/mv /etc/localtime /etc/localtime.bak
-  /bin/ln -s /usr/share/zoneinfo/Asia/Singapore /etc/localtime
-  /bin/cp /tmp/amimoto/etc/motd /etc/motd
-  /bin/cp /tmp/amimoto/etc/sysconfig/i18n /etc/sysconfig/i18n
-elif [ "$SERVERNAME" = "$INSTANCEID" ]; then
-  /bin/mv /etc/localtime /etc/localtime.bak
-  /bin/ln -s /usr/share/zoneinfo/UTC /etc/localtime
-  /bin/cp /tmp/amimoto/etc/motd /etc/motd
-  /bin/cp /tmp/amimoto/etc/sysconfig/i18n /etc/sysconfig/i18n
-fi
+/bin/mv /etc/localtime /etc/localtime.bak
+/bin/ln -s /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+/bin/cp /tmp/amimoto/etc/motd /etc/motd
+/bin/cp /tmp/amimoto/etc/sysconfig/i18n /etc/sysconfig/i18n
   
 /bin/cp -Rf /tmp/amimoto/etc/nginx/* /etc/nginx/
 sed -e "s/\$host\([;\.]\)/$INSTANCEID\1/" /tmp/amimoto/etc/nginx/conf.d/default.conf > /etc/nginx/conf.d/default.conf
@@ -108,36 +65,31 @@ if [ "$SERVERNAME" = "$INSTANCEID" ]; then
 fi
 
 if [ "$SERVERNAME" = "$INSTANCEID" ]; then
-  /sbin/service mysql stop
-  /bin/cp /tmp/amimoto/etc/my.cnf /etc/
-  /bin/rm /var/lib/mysql/ib_logfile*
-  /bin/rm /var/log/mysqld.log*
-  /sbin/service mysql start
+#  /sbin/service mysql stop
+#  /bin/cp /tmp/amimoto/etc/my.cnf /etc/
+#  /bin/rm /var/lib/mysql/ib_logfile*
+#  /bin/rm /var/log/mysqld.log*
+#  /sbin/service mysql start
 fi
 
 echo "WordPress install ..."
-if [ "$REGION" = "ap-northeast-1" ]; then
-  /usr/bin/wget http://ja.wordpress.org/latest-ja.tar.gz > /dev/null 2>&1
-  /bin/tar xvfz /tmp/latest-ja.tar.gz > /dev/null 2>&1
-  /bin/rm /tmp/latest-ja.tar.gz
-else
-  /usr/bin/wget http://wordpress.org/latest.tar.gz > /dev/null 2>&1
+  /usr/bin/wget http://br.wordpress.org/latest-pt_BR.tar.gz > /dev/null 2>&1
   /bin/tar xvfz /tmp/latest.tar.gz > /dev/null 2>&1
   /bin/rm /tmp/latest.tar.gz
 fi
 /bin/mv /tmp/wordpress /var/www/vhosts/$SERVERNAME
 if [ -f /tmp/amimoto/wp-setup.php ]; then
-  /usr/bin/php /tmp/amimoto/wp-setup.php $SERVERNAME $INSTANCEID $PUBLICNAME
+  /usr/bin/php /tmp/amimoto/wp-setup.php $SERVERNAME $INSTANCEID $PUBLICNAME $
 fi
 /bin/chown -R nginx:nginx /var/log/nginx
 plugin_install "nginx-champuru.1.1.5.zip" "$SERVERNAME" > /dev/null 2>&1
-plugin_install "wpbooster-cdn-client.2.3.0.zip" "$SERVERNAME" > /dev/null 2>&1
-plugin_install "wp-remote-manager-client.0.7.0.2.zip" "$SERVERNAME" > /dev/null 2>&1
 plugin_install "head-cleaner.1.4.2.10.zip" "$SERVERNAME" > /dev/null 2>&1
 plugin_install "wp-total-hacks.1.0.2.zip" "$SERVERNAME" > /dev/null 2>&1
-plugin_install "flamingo.1.0.3.zip" "$SERVERNAME" > /dev/null 2>&1
-plugin_install "contact-form-7.3.3.1.zip" "$SERVERNAME" > /dev/null 2>&1
 plugin_install "jetpack.2.0.zip" "$SERVERNAME" > /dev/null 2>&1
+plugin_install "worker.zip" "$SERVERNAME" > /dev/null 2>&1
+plugin_install "w3-total-cache.0.9.2.4.zip" "$SERVERNAME" > /dev/null 2>&1
+plugin_install "wp-optimize.0.9.4.zip" "$SERVERNAME" > /dev/null 2>&1
+plugin_install "login-lockdown.1.5.zip" "$SERVERNAME" > /dev/null 2>&1
 echo "... WordPress installed"
 
 /bin/chown -R nginx:nginx /var/log/nginx
