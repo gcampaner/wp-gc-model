@@ -67,7 +67,7 @@ fi
 echo "WordPress install ..."
 /usr/bin/wget http://br.wordpress.org/latest-pt_BR.tar.gz > /dev/null 2>&1
 /bin/tar xvfz /tmp/latest-pt_BR.tar.gz > /dev/null 2>&1
-/bin/rm /tmp/latest.tar.gz
+/bin/rm /tmp/latest-pt_BR.tar.gz
 
 /bin/mv /tmp/wordpress /var/www/vhosts/$SERVERNAME
 if [ -f /tmp/wp-gc-model/wp-setup.php ]; then
