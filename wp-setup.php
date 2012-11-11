@@ -94,7 +94,11 @@ if ( $instance_id === $site_name ) {
 
 $wp_cfg = str_replace("\r\n", "\n", $wp_cfg);
 
-file_put_contents("/var/www/vhosts/{$site_name}/wp-config.php", $wp_cfg);
+echo "\n--------------------------------------------------\n";
+echo " file_put_contents\n";
+echo "--------------------------------------------------\n";
+
+var_dump(file_put_contents("/var/www/vhosts/{$site_name}/wp-config.php", $wp_cfg));
 
 $ngx_champuru = "/var/www/vhosts/{$site_name}/wp-content/plugins/nginx-champuru/nginx-champuru.php";
 if ( file_exists($ngx_champuru) ) {
