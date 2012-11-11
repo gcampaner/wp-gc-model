@@ -16,15 +16,20 @@ $mysql_db   = $site_name !== 'default' ? $dbuser[0] : 'wordpress';
 $mysql_user = $dbuser[0];
 $mysql_pwd  = empty($mysql_pwd)  ? md5(mt_rand().date("YmdHisu"))    : $mysql_pwd;
 
+$DB_NAME = $mysql_db ;
+$DB_USER = 'gcmysql' ;
+$DB_PASSWORD  = 'Muitosucesso' ;
+$DB_HOST = 'mysql.gcampaner.com.br' ;
+
 // make user and database
-$link = mysql_connect('mysql.gcampaner.com.br', 'gcmysql', 'Muitosucesso');
+$link = mysql_connect($DB_HOST, $DB_USER, $DB_PASSWORD);
 if ( !$link )
     die('MySQL connect error!!: '.mysql_error());
 if ( !mysql_select_db('mysql', $link) )
     die('MySQL select DB error!!: '.mysql_error());
 if ( !mysql_query("create database {$mysql_db} default character set utf8 collate utf8_general_ci;") )
     die('MySQL create database error!!: '.mysql_error());
-if ( !mysql_query("grant all privileges on {$mysql_db}.* to {$mysql_user}@localhost identified by '{$mysql_pwd}';") )
+if ( !mysql_query("grant all privileges on {$mysql_db}.* to {$DB_NAME}@localhost identified by '{$DB_PASSWORD}';") )
     die('MySQL create user error!!: '.mysql_error());
     
 mysql_close($link);
@@ -59,10 +64,10 @@ require_once(ABSPATH . 'wp-settings.php');
 EOT;
 }
 
-$wp_cfg = preg_replace('/define\([\s]*[\'"]DB_NAME[\'"][\s]*,[\s]*[\'"][^\'"]*[\'"][\s]*\)/i', "define('DB_NAME', '{$mysql_db}')", $wp_cfg);
-$wp_cfg = preg_replace('/define\([\s]*[\'"]DB_USER[\'"][\s]*,[\s]*[\'"][^\'"]*[\'"][\s]*\)/i', "define('DB_USER', '{$mysql_user}')", $wp_cfg);
-$wp_cfg = preg_replace('/define\([\s]*[\'"]DB_PASSWORD[\'"][\s]*,[\s]*[\'"][^\'"]*[\'"][\s]*\)/i', "define('DB_PASSWORD', '{$mysql_pwd}')", $wp_cfg);
-$wp_cfg = preg_replace('/define\([\s]*[\'"]DB_HOST[\'"][\s]*,[\s]*[\'"][^\'"]*[\'"][\s]*\)/i', "define('DB_HOST', 'localhost:/var/lib/mysql/mysql.sock')", $wp_cfg);
+$wp_cfg = preg_replace('/define\([\s]*[\'"]DB_NAME[\'"][\s]*,[\s]*[\'"][^\'"]*[\'"][\s]*\)/i', "define('DB_NAME', '{$DB_NAME}')", $wp_cfg);
+$wp_cfg = preg_replace('/define\([\s]*[\'"]DB_USER[\'"][\s]*,[\s]*[\'"][^\'"]*[\'"][\s]*\)/i', "define('DB_USER', '{$DB_USER}')", $wp_cfg);
+$wp_cfg = preg_replace('/define\([\s]*[\'"]DB_PASSWORD[\'"][\s]*,[\s]*[\'"][^\'"]*[\'"][\s]*\)/i', "define('DB_PASSWORD', '{$DB_PASSWORD}')", $wp_cfg);
+$wp_cfg = preg_replace('/define\([\s]*[\'"]DB_HOST[\'"][\s]*,[\s]*[\'"][^\'"]*[\'"][\s]*\)/i', "define('DB_HOST', '{$DB_HOST}')", $wp_cfg);
 
 $salts  = preg_split('/[\r\n]+/ms', file_get_contents('https://api.wordpress.org/secret-key/1.1/salt/'));
 foreach ( $salts as $salt ) {
