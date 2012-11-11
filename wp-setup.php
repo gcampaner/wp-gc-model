@@ -29,8 +29,8 @@ if ( !mysql_select_db('mysql', $link) )
     die('MySQL select DB error!!: '.mysql_error());
 if ( !mysql_query("create database {$mysql_db} default character set utf8 collate utf8_general_ci;") )
     die('MySQL create database error!!: '.mysql_error());
-if ( !mysql_query("grant all privileges on {$mysql_db}.* to {$DB_NAME}@localhost identified by '{$DB_PASSWORD}';") )
-    die('MySQL create user error!!: '.mysql_error());
+#if ( !mysql_query("grant all privileges on {$mysql_db}.* to {$DB_NAME}@localhost identified by '{$DB_PASSWORD}';") )
+#    die('MySQL create user error!!: '.mysql_error());
     
 mysql_close($link);
 
@@ -38,30 +38,6 @@ mysql_close($link);
 $wp_cfg = "/var/www/vhosts/{$site_name}/wp-config-sample.php";
 if ( file_exists($wp_cfg) ) {
     $wp_cfg = file_get_contents($wp_cfg);
-} else {
-    $wp_cfg = <<<EOT
-<?php
-define('DB_NAME', 'database_name_here');
-define('DB_USER', 'username_here');
-define('DB_PASSWORD', 'password_here');
-define('DB_HOST', 'localhost');
-define('DB_CHARSET', 'utf8');
-define('DB_COLLATE', '');
-define('AUTH_KEY',         'put your unique phrase here');
-define('SECURE_AUTH_KEY',  'put your unique phrase here');
-define('LOGGED_IN_KEY',    'put your unique phrase here');
-define('NONCE_KEY',        'put your unique phrase here');
-define('AUTH_SALT',        'put your unique phrase here');
-define('SECURE_AUTH_SALT', 'put your unique phrase here');
-define('LOGGED_IN_SALT',   'put your unique phrase here');
-define('NONCE_SALT',       'put your unique phrase here');
-\$table_prefix  = 'wp_';
-define('WPLANG', 'pt_BR');
-define('WP_DEBUG', false);
-if ( !defined('ABSPATH') )
-    define('ABSPATH', dirname(__FILE__) . '/');
-require_once(ABSPATH . 'wp-settings.php');
-EOT;
 }
 
 $wp_cfg = preg_replace('/define\([\s]*[\'"]DB_NAME[\'"][\s]*,[\s]*[\'"][^\'"]*[\'"][\s]*\)/i', "define('DB_NAME', '{$DB_NAME}')", $wp_cfg);
