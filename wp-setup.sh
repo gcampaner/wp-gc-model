@@ -41,16 +41,16 @@ cd /tmp/
 /bin/cp /tmp/wp-gc-model/etc/sysconfig/i18n /etc/sysconfig/i18n
   
 /bin/cp -Rf /tmp/wp-gc-model/etc/nginx/* /etc/nginx/
-sed -e "s/\$host\([;\.]\)/$INSTANCEID\1/" /tmp/wp-gc-model/etc/nginx/conf.d/default.conf > /etc/nginx/conf.d/default.conf
-sed -e "s/\$host\([;\.]\)/$INSTANCEID\1/" /tmp/wp-gc-model/etc/nginx/conf.d/default.backend.conf > /etc/nginx/conf.d/default.backend.conf
+#sed -e "s/\$host\([;\.]\)/$INSTANCEID\1/" /tmp/wp-gc-model/etc/nginx/conf.d/default.conf > /etc/nginx/conf.d/default.conf
+#sed -e "s/\$host\([;\.]\)/$INSTANCEID\1/" /tmp/wp-gc-model/etc/nginx/conf.d/default.backend.conf > /etc/nginx/conf.d/default.backend.conf
 if [ "$SERVERNAME" = "$INSTANCEID" ]; then
   /sbin/service nginx stop
   /bin/rm -Rf /var/log/nginx/*
   /bin/rm -Rf /var/cache/nginx/*
   /sbin/service nginx start
 else
-  sed -e "s/\$host\([;\.]\)/$SERVERNAME\1/" /tmp/wp-gc-model/etc/nginx/conf.d/default.conf | sed -e "s/ default;/;/" | sed -e "s/\(server_name \)_/\1$SERVERNAME www.$SERVERNAME/" | sed -e "s/\(\\s*\)\(include     \/etc\/nginx\/phpmyadmin;\)/\1#\2/" > /etc/nginx/conf.d/$SERVERNAME.conf
-  sed -e "s/\$host\([;\.]\)/$SERVERNAME\1/" /tmp/wp-gc-model/etc/nginx/conf.d/default.backend.conf | sed -e "s/ default;/;/" | sed -e "s/\(server_name \)_/\1$SERVERNAME www.$SERVERNAME/" > /etc/nginx/conf.d/$SERVERNAME.backend.conf
+  sed -e "s/\$host\([;\.]\)/$SERVERNAME\1/" /tmp/wp-gc-model/etc/nginx/conf.d/default.conf | sed -e "s/ default;/;/" | sed -e "s/\(server_name \)_/\1$SERVERNAME www.$SERVERNAME $SERVERNAME.gcampaner.com.br/" | sed -e "s/\(\\s*\)\(include     \/etc\/nginx\/phpmyadmin;\)/\1#\2/" > /etc/nginx/conf.d/$SERVERNAME.conf
+  sed -e "s/\$host\([;\.]\)/$SERVERNAME\1/" /tmp/wp-gc-model/etc/nginx/conf.d/default.backend.conf | sed -e "s/ default;/;/" | sed -e "s/\(server_name \)_/\1$SERVERNAME www.$SERVERNAME $SERVERNAME.gcampaner.com.br/" > /etc/nginx/conf.d/$SERVERNAME.backend.conf
   /usr/sbin/nginx -s reload
 fi
 

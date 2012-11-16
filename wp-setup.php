@@ -14,7 +14,7 @@ switch($argc) {
 $dbuser = explode('.', $site_name) ;
 $mysql_db   = $site_name !== 'default' ? $dbuser[0] : 'wordpress';
 $mysql_user = $dbuser[0];
-$mysql_pwd  = empty($mysql_pwd)  ? md5(mt_rand().date("YmdHisu"))    : $mysql_pwd;
+$mysql_pwd  = 'Muitosucesso';
 
 $DB_NAME = $mysql_db ;
 $DB_USER = 'gcmysql' ;
